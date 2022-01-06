@@ -1,0 +1,10 @@
+insert into pais (id, nome) values (1, 'Brasil');
+insert into pais (id, nome) values (2, 'Argentina');
+insert into pais (id, nome) values (3, 'Colombia');
+insert into pais (id, nome) values (4, 'EUA');
+insert into pais (id, nome) values (5, 'França');
+insert into pais (id, nome) values (6, 'Holanda');
+insert into pais (id, nome) values (7, 'Nigéria');
+insert into pais (id, nome) values (8, 'Australia');
+insert into pais (id, nome) values (9, 'Canada');
+insert into pais (id, nome) values (10, 'Russia');
