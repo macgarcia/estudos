@@ -6,16 +6,27 @@ import com.github.sarxos.webcam.WebcamResolution;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
 /**
  *
@@ -24,13 +35,14 @@ import javax.swing.JTextField;
 public class TelaCapturarImagemService extends RegraSelecaoImagem {
 
     private Webcam webCam;
-
     private boolean cameraLigada;
+    private JLabel lblImagemCapturada;
 
     public TelaCapturarImagemService(final JInternalFrame tela) {
         tela.setTitle("Capturar imagem");
         tela.setResizable(false);
         configurarCamera();
+        acaoDoFecharJanea(tela);
     }
 
     private void configurarCamera() {
@@ -42,73 +54,51 @@ public class TelaCapturarImagemService extends RegraSelecaoImagem {
     public void acaoDosBotoes(final List<JButton> botoes,
             final JLabel lblImagemCapturada) {
 
-        //Desligar
-        botoes.get(0).addActionListener(ae -> {
-            cameraLigada = false;
-            lblImagemCapturada.setIcon(null);
-            desligarCamera();
-        });
+        this.lblImagemCapturada = lblImagemCapturada;
+        JButton salvar = botoes.get(0);
+        JButton capturar = botoes.get(1);
+        capturar.setEnabled(false);
 
         //Ligar
-        botoes.get(1).addActionListener(ae -> {
-            //ligarCamera(lblImagemCapturada);
-            new Thread() {
-                @Override
-                public void run() {
-                    webCam.open();
-                    cameraLigada = true;
-                    iniciarThreadDeCaptura(lblImagemCapturada);
-                }
-            }.start();
-
+        botoes.get(0).addActionListener(ae -> {
+            ligarCamera();
+            salvar.setEnabled(false);
+            capturar.setEnabled(true);
         });
 
-        botoes.get(2).addActionListener(ae -> {
-            cameraLigada = false;
-            desligarCamera();
-            final String caminhoParaSalvar = caixaDeSalvamento();
-
+        //Capturar
+        botoes.get(1).addActionListener(ae -> {
+            acaoBotaoCaputrar();
         });
     }
 
-    private void iniciarThreadDeCaptura(final JLabel lblImagemCapturada) {
+    private void iniciarThreadDeCaptura() {
         new Thread() {
             @Override
             public void run() {
-                while (cameraLigada) {
-                    BufferedImage image = webCam.getImage();
-                    ImageIcon icon = new ImageIcon(image);
-                    icon.setImage(image.getScaledInstance(lblImagemCapturada.getWidth(),
-                            lblImagemCapturada.getHeight(),
-                            100));
-
-                    lblImagemCapturada.setIcon(icon);
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException ex) {
-
+                try {
+                    while (cameraLigada) {
+                        BufferedImage image = webCam.getImage();
+                        ImageIcon icon = new ImageIcon(image);
+                        icon.setImage(image.getScaledInstance(lblImagemCapturada.getWidth(),
+                                lblImagemCapturada.getHeight(),
+                                100));
+                        lblImagemCapturada.setIcon(icon);
                     }
+                    Thread.sleep(50);
+                } catch (InterruptedException ex) {
                 }
             }
         }.start();
     }
 
-    private void ligarCamera(final JLabel lblImagemCapturada) {
+    private void ligarCamera() {
         new Thread() {
             @Override
             public void run() {
                 webCam.open();
                 cameraLigada = true;
-                iniciarThreadDeCaptura(lblImagemCapturada);
-            }
-        }.start();
-    }
-
-    private void desligarCamera() {
-        new Thread() {
-            @Override
-            public void run() {
-                webCam.close();
+                iniciarThreadDeCaptura();
             }
         }.start();
     }
@@ -147,5 +137,48 @@ public class TelaCapturarImagemService extends RegraSelecaoImagem {
             }
         }
         return false;
+    }
+
+    private void acaoBotaoCaputrar() {
+        cameraLigada = false;
+        final String caminhoParaSalvar = caixaDeSalvamento();
+
+        //se cancelou a ação de salvar a foto
+        if (!caminhoParaSalvar.isEmpty()) {
+            salvarCaptura(caminhoParaSalvar);
+        }
+        ligarCamera();
+    }
+
+    private void acaoDoFecharJanea(JInternalFrame tela) {
+        tela.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosed(InternalFrameEvent e) {
+                cameraLigada = false;
+                if (webCam.isOpen()) {
+                    webCam.close();
+                }
+            }
+        });
+    }
+
+    private void salvarCaptura(final String caminho) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(webCam.getImage(), "JPG", baos);
+            byte[] bytes = baos.toByteArray();
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+            BufferedImage bi = ImageIO.read(bais);
+
+            ImageIO.write(bi,
+                    "JPG",
+                    new File(caminho + File.separator + LocalDateTime.now().toString()));
+
+            webCam.close();
+        } catch (IOException e) {
+
+        }
+
     }
 }

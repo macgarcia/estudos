@@ -26,7 +26,7 @@ public class TelaCapturarImagem extends javax.swing.JInternalFrame {
         service = new TelaCapturarImagemService(this);
         
         
-        List<JButton> botoes = Arrays.asList(btnDesligar, btnLigar, btnCapturar);
+        List<JButton> botoes = Arrays.asList(btnLigar, btnCapturar);
         service.acaoDosBotoes(botoes, lblImagemCapturada);
     }
 
@@ -41,7 +41,6 @@ public class TelaCapturarImagem extends javax.swing.JInternalFrame {
 
         jLabel1 = new javax.swing.JLabel();
         lblImagemCapturada = new javax.swing.JLabel();
-        btnDesligar = new javax.swing.JButton();
         btnLigar = new javax.swing.JButton();
         btnCapturar = new javax.swing.JButton();
 
@@ -52,8 +51,6 @@ public class TelaCapturarImagem extends javax.swing.JInternalFrame {
         jLabel1.setText("Imgem capturada");
 
         lblImagemCapturada.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        btnDesligar.setText("Desligar");
 
         btnLigar.setText("Ligar");
 
@@ -72,9 +69,7 @@ public class TelaCapturarImagem extends javax.swing.JInternalFrame {
                         .addGap(106, 106, 106)
                         .addComponent(lblImagemCapturada, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(204, 204, 204)
-                        .addComponent(btnDesligar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(236, 236, 236)
                         .addComponent(btnLigar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnCapturar)))
@@ -89,10 +84,9 @@ public class TelaCapturarImagem extends javax.swing.JInternalFrame {
                 .addComponent(lblImagemCapturada, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDesligar)
                     .addComponent(btnLigar)
                     .addComponent(btnCapturar))
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         pack();
@@ -101,7 +95,6 @@ public class TelaCapturarImagem extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCapturar;
-    private javax.swing.JButton btnDesligar;
     private javax.swing.JButton btnLigar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblImagemCapturada;
