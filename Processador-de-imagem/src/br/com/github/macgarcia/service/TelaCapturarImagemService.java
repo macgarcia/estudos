@@ -1,13 +1,12 @@
 package br.com.github.macgarcia.service;
 
 import br.com.github.macgarcia.componente.RegraSelecaoImagem;
+import br.com.github.macgarcia.util.FactoryMensagem;
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamResolution;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -23,8 +22,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
@@ -37,6 +34,7 @@ public class TelaCapturarImagemService extends RegraSelecaoImagem {
     private Webcam webCam;
     private boolean cameraLigada;
     private JLabel lblImagemCapturada;
+    private BufferedImage fotografia;
 
     public TelaCapturarImagemService(final JInternalFrame tela) {
         tela.setTitle("Capturar imagem");
@@ -140,12 +138,13 @@ public class TelaCapturarImagemService extends RegraSelecaoImagem {
     }
 
     private void acaoBotaoCaputrar() {
+        fotografia = webCam.getImage();
         cameraLigada = false;
         final String caminhoParaSalvar = caixaDeSalvamento();
-
         //se cancelou a ação de salvar a foto
         if (!caminhoParaSalvar.isEmpty()) {
             salvarCaptura(caminhoParaSalvar);
+            FactoryMensagem.mensagemOk("Imagem salva com sucesso.");
         }
         ligarCamera();
     }
@@ -165,7 +164,7 @@ public class TelaCapturarImagemService extends RegraSelecaoImagem {
     private void salvarCaptura(final String caminho) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(webCam.getImage(), "JPG", baos);
+            ImageIO.write(fotografia, "JPG", baos);
             byte[] bytes = baos.toByteArray();
 
             ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
@@ -177,7 +176,7 @@ public class TelaCapturarImagemService extends RegraSelecaoImagem {
 
             webCam.close();
         } catch (IOException e) {
-
+            FactoryMensagem.mensagemErro("Diretório não encontrado");
         }
 
     }
