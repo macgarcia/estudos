@@ -43,6 +43,7 @@ public class TelaInicialService {
             abrirTelaListarImagem(desktop);
         });
 
+        //Arquivo -> capturar Imagem
         menu.getItem(2).addActionListener(ae -> {
             abrirTelaCapturaImagem(desktop);
         });

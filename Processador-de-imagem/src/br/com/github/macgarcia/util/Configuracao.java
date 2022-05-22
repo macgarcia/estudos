@@ -1,6 +1,7 @@
 package br.com.github.macgarcia.util;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.Instant;
@@ -82,5 +83,5 @@ public class Configuracao {
                 .withZone(ZoneId.systemDefault())
                 .format(agora);
     }
-
+    
 }

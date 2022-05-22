@@ -2,6 +2,7 @@ package br.com.github.macgarcia.service;
 
 import br.com.github.macgarcia.componente.RegraSelecaoImagem;
 import br.com.github.macgarcia.modelo.Imagem;
+import br.com.github.macgarcia.qrcode.ProcessarQrCode;
 import br.com.github.macgarcia.repository.ImagemRepository;
 import br.com.github.macgarcia.util.FactoryMensagem;
 import br.com.github.macgarcia.util.GeradorHistograma;
@@ -67,7 +68,7 @@ public class TelaCadastroImagemService extends RegraSelecaoImagem {
 
                 Mat mat = Highgui.imread(caminho);
                 Imgproc.cvtColor(mat, mat, Imgproc.COLOR_RGB2GRAY);
-                Long histogramaSomado = gh.criarHistograma(mat);
+                Long histogramaSomado = gh.criarHistograma(mat);             
 
                 Imagem novaImagem = new Imagem(nome, histogramaSomado, imagemEmBytes);
 

@@ -15,28 +15,27 @@ import javax.persistence.Table;
  *
  * @author macgarcia
  */
-
 @Entity
 @Table(name = "IMAGEM")
 @SequenceGenerator(name = "imagem_seq", sequenceName = "imagem_seq", initialValue = 1, allocationSize = 1)
 public class Imagem implements Serializable, EntityBase {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "imagem_seq")
     private Long id;
-    
+
     @Column(name = "NOME_FOTO")
     private String nomeFoto;
-    
+
     @Column(name = "HISTOGRAMA", unique = true)
     private Long histograma;
-    
+
     @Column(name = "IMG_BINARIA")
     @Lob
     private byte[] img;
 
     public Imagem() {
-        
+
     }
 
     public Imagem(String nomeFoto, Long histograma, byte[] img) {
@@ -44,7 +43,7 @@ public class Imagem implements Serializable, EntityBase {
         this.histograma = histograma;
         this.img = img;
     }
-    
+
     @Override
     public Long getId() {
         return id;
@@ -77,7 +76,5 @@ public class Imagem implements Serializable, EntityBase {
     public void setImg(byte[] img) {
         this.img = img;
     }
-    
-    
     
 }
